@@ -8,7 +8,7 @@
         <p><?= $article->description ?></p>
 
         <?php // TODO: links to next and previous ?>
-        <a href="#">Previous article</a>
+        <a href="index.php?page=detail&id=<?= ($article-> id + 1) ?> ">Previous article</a>
         <a href="#">Next article</a>
     </section>
 

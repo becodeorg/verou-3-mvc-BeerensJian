@@ -6,6 +6,7 @@ class ArticleController
 {
     // TODO: prepare the database connection
     private DatabaseManager $databaseManager;
+    public int $arrayLength;
 
     public function __construct(DatabaseManager $databaseManager)
     {
@@ -36,16 +37,22 @@ class ArticleController
             // We are converting an article from a "dumb" array to a much more flexible class
             $articles[] = new Article( $rawArticle['title'], $rawArticle['description'], $rawArticle['date'], (int)$rawArticle['id']);
         }
-
+        $this->arrayLength = count($articles);
         return $articles;
     }
 
     public function show()
     {
+
         $sql = "SELECT * FROM articles WHERE id={$_GET['id']}";
         $dumbArticle = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC)->fetch();
         $article = new Article($dumbArticle['title'], $dumbArticle['description'], $dumbArticle['date'], (int)$dumbArticle['id']);
         // TODO: this can be used for a detail page
         require 'View/articles/show.php';
+    }
+
+    public function nextArticle() // Returns an id based on the current id
+    {
+        return $_GET['id'] + 1;
     }
 }
