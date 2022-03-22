@@ -6,6 +6,24 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
+function whatIsHappening() {
+    echo '<h2>$_GET</h2>';
+    pre_r($_GET);
+    //echo '<h2>$_POST</h2>';
+    //pre_r($_POST);
+    //echo '<h2>$_COOKIE</h2>';
+   // pre_r($_COOKIE);
+   // echo '<h2>$_SESSION</h2>';
+    //pre_r($_SESSION);
+
+}
+
+function pre_r($array)
+{
+    echo '<pre>';
+    print_r($array);
+    echo '</pre>';
+}
 //include all your model files here
 
 require 'Controller/DatabaseManager.php';
@@ -14,7 +32,7 @@ require 'Model/Article.php';
 require 'Controller/HomepageController.php';
 require 'Controller/ArticleController.php';
 
-
+whatIsHappening();
 // Get the current page to load
 // If nothing is specified, it will remain empty (home should be loaded)
 $page = $_GET['page'] ?? null;
