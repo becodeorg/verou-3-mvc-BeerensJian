@@ -25,13 +25,16 @@ function pre_r($array)
     echo '</pre>';
 }
 //include all your model files here
-
+require 'config.php';
 require 'Controller/DatabaseManager.php';
 require 'Model/Article.php';
 //include all your controllers here
 require 'Controller/HomepageController.php';
 require 'Controller/ArticleController.php';
 
+
+$DatabaseManager = new DatabaseManager($config["host"], $config ["user"], $config["password"], $config["dbname"]);
+$DatabaseManager->connect();
 whatIsHappening();
 // Get the current page to load
 // If nothing is specified, it will remain empty (home should be loaded)
@@ -44,10 +47,11 @@ switch ($page) {
         // This is shorthand for:
         // $articleController = new ArticleController;
         // $articleController->index();
-        (new ArticleController())->index();
+        (new ArticleController($DatabaseManager))->index();
         break;
     case 'detail':
         // TODO: detail page
+        (new ArticleController($DatabaseManager))->show();
     case 'home':
     default:
         (new HomepageController())->index();

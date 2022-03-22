@@ -4,7 +4,13 @@ declare(strict_types = 1);
 
 class ArticleController
 {
-    private $config ;
+    // TODO: prepare the database connection
+    private DatabaseManager $databaseManager;
+
+    public function __construct(DatabaseManager $databaseManager)
+    {
+    $this->databaseManager = $databaseManager;
+    }
 
     public function index()
     {
@@ -19,21 +25,16 @@ class ArticleController
     // Note: this function can also be used in a repository - the choice is yours
     private function getArticles()
     {
-        include 'config.php';
-        // TODO: prepare the database connection
-        $DatabaseManager = new DatabaseManager($config["host"], $config ["user"], $config["password"], $config["dbname"]);
-        $DatabaseManager->connect();
         // Note: you might want to use a re-usable databaseManager class - the choice is yours
         // TODO: fetch all articles as $rawArticles (as a simple array)
         $sql = "SELECT * FROM articles";
-        $result = $DatabaseManager ->connection->query($sql, PDO::FETCH_ASSOC);
+        $result = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC);
         $rawArticles = $result->fetchAll();
-
 
         $articles = [];
         foreach ($rawArticles as $rawArticle) {
             // We are converting an article from a "dumb" array to a much more flexible class
-            $articles[] = new Article($rawArticle['title'], $rawArticle['description'], $rawArticle['date']);
+            $articles[] = new Article( $rawArticle['title'], $rawArticle['description'], $rawArticle['date'], (int)$rawArticle['id']);
         }
 
         return $articles;
@@ -41,6 +42,10 @@ class ArticleController
 
     public function show()
     {
+        $sql = "SELECT * FROM articles WHERE id={$_GET['id']}";
+        $dumbArticle = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC)->fetch();
+        $article = new Article($dumbArticle['title'], $dumbArticle['description'], $dumbArticle['date'], (int)$dumbArticle['id']);
         // TODO: this can be used for a detail page
+        require 'View/articles/show.php';
     }
 }
