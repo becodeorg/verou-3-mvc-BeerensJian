@@ -6,6 +6,8 @@
         <h1><?= $article->title ?></h1>
         <p><?= $article->formatPublishDate() ?></p>
         <p><?= $article->description ?></p>
+        <img src="<?= $article-> url ?>" alt="">
+        <br>
 
         <?php // TODO: links to next and previous ?>
         <a href="index.php?page=detail&id=<?= ($article-> id - 1) ?>">Previous article</a>

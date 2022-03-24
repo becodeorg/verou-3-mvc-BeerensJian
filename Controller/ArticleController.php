@@ -41,19 +41,17 @@ class ArticleController
 
     public function show()
     {
-        ;
-
         try {
             if ($_GET['id'] == 0) {
                 $_GET['id'] = 1;
             } elseif ($_GET['id'] > $this->getCount()) {
-                $_GET['id'] = 3;
+                $_GET['id'] = $this->getCount();
 
             }
 
             $sql = "SELECT * FROM articles WHERE id={$_GET['id']}";
             $dumbArticle = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC)->fetch();
-            $article = new Article($dumbArticle['title'], $dumbArticle['description'], $dumbArticle['date'], (int)$dumbArticle['id']);
+            $article = new Article($dumbArticle['title'], $dumbArticle['description'], $dumbArticle['date'], (int)$dumbArticle['id'], $dumbArticle['image_url']);
 
         } catch (PDOException $exception) {
             echo $exception ->getMessage();
