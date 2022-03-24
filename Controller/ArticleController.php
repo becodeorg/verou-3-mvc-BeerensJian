@@ -53,7 +53,7 @@ class ArticleController
         
         
         pre_r($this->getNextID());
-        echo $_GET['id'];
+        echo $this->getMaxID();
 
         $sql = "SELECT * FROM articles WHERE id={$_GET['id']}";
         $dumbArticle = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC)->fetch();
@@ -76,7 +76,7 @@ class ArticleController
         try {
             $nextID = $this->databaseManager->connection->query($sql, PDO::FETCH_NUM)->fetch();
             if ($nextID == false) {
-                return 1;
+                return $this->getMinID();
             } else {
                 return $nextID[0];
             }
@@ -91,7 +91,7 @@ class ArticleController
         try {
             $prevID = $this->databaseManager->connection->query($sql, PDO::FETCH_NUM)->fetch();
             if ($prevID == false) {
-                return 3; // Gonna make a min and max function later but Im too tired TODO:
+                return $this -> getMaxID(); 
             } else {
                 return $prevID[0];
             }
@@ -99,4 +99,20 @@ class ArticleController
             echo "<br>" . $e->getMessage();
         }
     }
+
+    private function getMaxID() 
+    {
+        $sql= "SELECT MAX(id) FROM articles";
+        $maxid = $this->databaseManager->connection->query($sql, PDO::FETCH_NUM)->fetch();
+        return $maxid[0];
+    }
+
+    private function getMinID() 
+    {
+        $sql= "SELECT MIN(id) FROM articles";
+        $maxid = $this->databaseManager->connection->query($sql, PDO::FETCH_NUM)->fetch();
+        return $maxid[0];
+    }
 }
+
+
