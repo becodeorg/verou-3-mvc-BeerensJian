@@ -41,22 +41,24 @@ class ArticleController
 
     public function show()
     {
-        try {
-            if ($_GET['id'] == 0) {
-                $_GET['id'] = 1;
-            } elseif ($_GET['id'] > $this->getCount()) {
-                $_GET['id'] = $this->getCount();
 
-            }
-
-            $sql = "SELECT * FROM articles WHERE id={$_GET['id']}";
-            $dumbArticle = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC)->fetch();
-            $article = new Article($dumbArticle['title'], $dumbArticle['description'], $dumbArticle['date'], (int)$dumbArticle['id'], $dumbArticle['image_url']);
-
-        } catch (PDOException $exception) {
-            echo $exception ->getMessage();
-        }
+        // if ($_GET['id'] == 0) {
+        //     $_GET['id'] = 1;
+        // } elseif ($_GET['id'] > $this->getCount()) {
+        //     $_GET['id'] = $this->getCount();
+        // }
+        
+        $nextid = $this->getNextID();
+        $previd = $this->getPrevID();
+        
+        
+        pre_r($this->getNextID());
         echo $_GET['id'];
+
+        $sql = "SELECT * FROM articles WHERE id={$_GET['id']}";
+        $dumbArticle = $this->databaseManager->connection->query($sql, PDO::FETCH_ASSOC)->fetch();
+        $article = new Article($dumbArticle['title'], $dumbArticle['description'], $dumbArticle['date'], (int)$dumbArticle['id'], $dumbArticle['image_url']);
+
         // TODO: this can be used for a detail page
         require 'View/articles/show.php';
     }
@@ -68,4 +70,33 @@ class ArticleController
         return $result[0];
     }
 
+    private function getNextID() 
+    {
+        $sql = "SELECT id FROM articles WHERE id > {$_GET['id']}";
+        try {
+            $nextID = $this->databaseManager->connection->query($sql, PDO::FETCH_NUM)->fetch();
+            if ($nextID == false) {
+                return 1;
+            } else {
+                return $nextID[0];
+            }
+        } catch(PDOException $e) {
+            echo "<br>" . $e->getMessage();
+        }
+    }
+
+    private function getPrevID() 
+    {
+        $sql = "SELECT id FROM articles WHERE id < {$_GET['id']} ORDER BY id DESC";
+        try {
+            $prevID = $this->databaseManager->connection->query($sql, PDO::FETCH_NUM)->fetch();
+            if ($prevID == false) {
+                return 3; // Gonna make a min and max function later but Im too tired TODO:
+            } else {
+                return $prevID[0];
+            }
+        } catch(PDOException $e) {
+            echo "<br>" . $e->getMessage();
+        }
+    }
 }

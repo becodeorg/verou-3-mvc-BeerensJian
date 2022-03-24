@@ -10,8 +10,8 @@
         <br>
 
         <?php // TODO: links to next and previous ?>
-        <a href="index.php?page=detail&id=<?= ($article-> id - 1) ?>">Previous article</a>
-        <a href="index.php?page=detail&id=<?= ($article-> id + 1) ?>">Next article</a>
+        <a href="index.php?page=detail&id=<?= $previd ?>">Previous article</a>
+        <a href="index.php?page=detail&id=<?= $nextid ?>">Next article</a>
     </section>
 
 <?php require 'View/includes/footer.php'?>
