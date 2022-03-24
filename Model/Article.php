@@ -25,4 +25,11 @@ class Article
         $unixtime = strtotime($this->publishDate);
         return date($format, $unixtime);
     }
+
+    public function getImage() 
+    {
+        if ($this-> url != null) {
+            return "<img src=\"{$this->url}\" >";
+        }
+    }
 }
